@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'kut'
+rescue LoadError
+  require 'rubygems'
+  require 'kut'
+end
+
+Kut.application.run

@@ -1,0 +1,6 @@
+Kut is copyrighted free software produced by Alexey Pavlyukov along with
+community contributions.
+
+Kut library distributed under GPL license.
+
+
