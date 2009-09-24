@@ -7,4 +7,8 @@ rescue LoadError
   require 'kut'
 end
 
+require 'kut/library/application'
+
+Kut.application.sub_applications << Kut::Library::SubApplication.new
+
 Kut.application.run
