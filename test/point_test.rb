@@ -1,13 +1,7 @@
 require 'test/unit'
-require 'misc/point'
+require 'kut/misc/point'
 
 class Point_Test < Test::Unit::TestCase
-  # def setup
-  # end
-
-  # def teardown
-  # end
-
   def test_compare
     assert(true, Point[1,2] == Point[1, 2])
     assert(true, Point[1,2] != Point[2, 2])

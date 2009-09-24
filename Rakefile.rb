@@ -17,9 +17,10 @@ end
  
 desc "genrates documentation"
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include( "README.textile",
-                           "lib/" )
-  rdoc.main = "README.textile"
+  rdoc.rdoc_files.include( "README.rdoc",
+                           "lib/",
+                            Dir.glob("{doc-src,.}/*.rdoc"))
+  rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "doc/html"
   rdoc.title = "Kut Documentation"
   rdoc.options = ['--charset=utf-8']
@@ -48,11 +49,11 @@ spec = Gem::Specification.new do |s|
   s.default_executable = "kut"    
     
   s.has_rdoc = false
-  s.rdoc_options = ["--main", "README.textile", "--title", "GostFrames Documentation"]
-  s.extra_rdoc_files = ["README.textile", "LICENSE.textile"]  
+  s.rdoc_options = ["--main", "README.rdoc", "--title", "GostFrames Documentation"]
+  #s.extra_rdoc_files = ["README.rdoc", "LICENSE.rdoc"]  
   s.rdoc_options = ["--charset=utf-8"]
   s.require_paths = ["lib"]  
-  s.files = Dir.glob("{examples,lib,data}/**/**/*") + ["Rakefile.rb"] + s.extra_rdoc_files
+  s.files = Dir.glob("{examples,lib,data}/**/**/*") + ["Rakefile.rb"] + Dir.glob("{doc-src,.}/*.rdoc")
   s.test_files = Dir[ "test/*_test.rb" ]    
 end
  
