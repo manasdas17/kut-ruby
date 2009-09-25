@@ -7,8 +7,12 @@ rescue LoadError
   require 'kut'
 end
 
-require 'kut/library/application'
+require 'kut/commands/lib-gen-cmd'
+require 'kut/commands/help-cmd'
 
-Kut.application.sub_applications << Kut::Library::SubApplication.new
+Kut.application.commands = [
+  Kut::HelpCommand.new,
+  Kut::LibraryGeneratorCommand.new
+]
 
 Kut.application.run

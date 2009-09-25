@@ -3,51 +3,47 @@ require 'ostruct'
 
 module Kut
   class Application
-    #attr_accessor :option_parser, :options
+    attr_accessor :commands
     
     def initialize
       @option_parser = OptionParser.new
       @options = OpenStruct.new
+      @commands = []
+    end
+        
+    def show_help
+      puts 'usage: kut [--help] COMMAND [ARGS]'
+      puts 'The most commonly used kut commands are:'
+      cmd_name_len = 10
+      commands.each { |cmd|
+        cmd_space = ' ' * (cmd_name_len - cmd.name.size)
+        puts "#{' '*3}#{cmd.name}#{cmd_space}#{cmd.help_banner}"
+      }
+      exit
     end
     
-    def sub_applications
-      @sub_applications = @sub_applications ? @sub_applications : []
-    end
-    
-    def help
-      'SubApplication list'
-    end
-    
-    def get_subapplication_by_name(app_name)
-      sub_app = nil
-      sub_applications.each { |app|
-        if app.name.to_s == app_name
-          sub_app = app
+    def command_by_name(cmd_name)
+      cmd = nil
+      commands.each { |c|
+        if c.name == cmd_name
+          cmd = c
           break 
         end
       } 
-      return sub_app 
+      return cmd 
+    end
+    
+    def run_command(cmd_name, args)
+      puts "Run command #{cmd_name}"
     end
     
     def run
-      puts "Application run"
-      if ARGV && ARGV.size() > 0 then
-        if ['help', '--help', '-h'].include?(ARGV[0]) then
-          if ARGV.size() > 1 && ARGV[0] == 'help' then
-            sub_app = get_subapplication_by_name(ARGV[1])
-            puts sub_app.help() if sub_app
-            puts help() unless sub_app
-          else
-            puts help()
-          end
-        else
-          sub_app = get_subapplication_by_name(ARGV[0])
-          sub_app.run()
-        end
-      else
-        puts help()
-      end
-     
+      show_help() unless ARGV
+      show_help() if ARGV.size() == 0
+      show_help() if ['-h', '--help'].include?(ARGV[0])
+      
+      args = ARGV.dup().delete_at(0)
+      run_command(ARGV[0], args)
     end
   end
 end

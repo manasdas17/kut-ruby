@@ -1,1 +1,10 @@
 = pins file format
+
+All strings in file starting with '#' is command for library generators.
+All another strings in file must be contains: pin number, space, pin name. 
+
+pins file example:
+ #NAMES POWER_5V, POWER_3V
+ 1 VCC
+ 2 GND
+ 
