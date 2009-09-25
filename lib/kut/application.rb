@@ -34,7 +34,13 @@ module Kut
     end
     
     def run_command(cmd_name, args)
-      puts "Run command #{cmd_name}"
+      cmd = command_by_name(cmd_name)
+      if cmd then
+        cmd.run(args) 
+      else
+        puts "kut: #{cmd_name} is not a kut-command. See 'kut --help'"
+        exit
+      end
     end
     
     def run
@@ -42,7 +48,8 @@ module Kut
       show_help() if ARGV.size() == 0
       show_help() if ['-h', '--help'].include?(ARGV[0])
       
-      args = ARGV.dup().delete_at(0)
+      args = ARGV.dup()
+      args.delete_at(0)
       run_command(ARGV[0], args)
     end
   end

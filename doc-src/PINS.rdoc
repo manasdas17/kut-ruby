@@ -8,3 +8,11 @@ pins file example:
  1 VCC
  2 GND
  
+Commands:
+ #NAMES - set component names
+ #REF - set component reference 
+ #TOP - all pins enumerated after this command will be placed from the top of the component
+ #BOTTOM - all pins enumerated after this command will be placed under the bottom of the component 
+ #LEFT - all pins enumerated after this command will be placed at the left of the component
+ #RIGHT - all pins enumerated after this command will be placed at the right of the component  
+ #NO-PIN - insert space instead of the pin

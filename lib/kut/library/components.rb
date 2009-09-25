@@ -56,6 +56,51 @@ module Kut
         "X #{@name} #{@number} #{@pos[0]} #{@pos[1]} #{@length} #{@orientation} #{@snum} #{@snom} #{@unit} #{@convert} #{@etype}\n"
       end
     end
+    
+    class Text
+      attr_accessor :orientation, :pos, :dimension, :unit, :convert, :text 
+      
+
+      def initialize(params = {}) #:orientation, :pos, :dimension, :unit, :convert, :text
+        if Hash === params
+          @orientation = params[:orientation] ? params[:orientation] : 0
+          @pos = params[:pos] ? params[:pos] : [0, 0]
+          @dimension = params[:dimension] ? params[:dimension] : 40
+          @unit = params[:unit] ? params[:unit] : 0
+          @convert = params[:convert] ? params[:convert] : 0
+          @text = params[:text] ? params[:text] : ''
+        end
+        #TODO implement raise exception
+      end
+            
+      def to_s
+        "T #{@orientation} #{@pos[0]} #{@pos[1]} #{@dimension} 0 #{@unit} #{@convert} #{@text}\n"
+      end
+    end    
+    
+    class Polygon
+      attr_accessor :parts, :convert, :ltrait
+      attr_accessor :points, :cc
+      
+      def initialize(params = {}) #:parts, :convert, :ltrait, :points, :cc
+        if Hash === params
+          @parts = params[:parts] ? params[:parts] : 0
+          @points = params[:points] ? params[:points] : []
+          @convert = params[:convert] ? params[:convert] : 0
+          @ltrait = params[:ltrait] ? params[:ltrait] : 0
+          @cc = params[:cc] ? params[:cc] : 'N'
+        end
+        #TODO implement raise exception
+      end      
+      
+      def to_s
+        result = "P #{@points.length} #{@parts} #{@convert} #{@ltrait}"
+        @points.each { |point|
+          result += " #{point[0]} #{point[1]}"
+        }
+        result += " #{@cc}\n"
+      end
+    end
         
     class Rectangle
       attr_accessor :start, :end, :unit, :convert, :ltrait, :cc
@@ -63,7 +108,7 @@ module Kut
       def initialize(params = {}) #:start, :end, :unit, :convert, :ltrait, :cc
         if Hash === params
           @start = params[:start] ? params[:start] : [0, 0]
-          @end = params[:end] ? params[:end] : [100, 100]
+          @end = params[:end] ? params[:end] : [0, 0]
           @unit = params[:unit] ? params[:unit] : 0
           @convert = params[:convert] ? params[:convert] : 0
           @ltrait = params[:ltrait] ? params[:ltrait] : 0
@@ -102,20 +147,14 @@ module Kut
       def to_s
         result = "DEF #{@name} #{@reference} 0 #{@text_offset} #{@draw_pinnumber} #{@draw_pinname} #{@unit_count} #{@units_locked} #{@option_flag}\n"
         result += "ALIAS"
-        @alias.each { |nm|
-          result += " #{nm}"
-        }
+        @alias.each { |nm| result += " #{nm}" } if @alias
         result += "\n"
         
-        @fields.each { |field|
-          result += "#{field.to_s}\n"
-        }
+        @fields.each { |field| result += "#{field.to_s}" } if @fields
         
         result += "DRAW\n"
         
-        @draws.each { |draw|
-          result += "#{draw.to_s}\n"
-        }
+        @draws.each { |draw| result += "#{draw.to_s}" } if @draws
         
         result += "ENDDRAW\n"
         

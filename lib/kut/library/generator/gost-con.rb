@@ -5,14 +5,13 @@ require 'kut/library/components'
 module Kut
   module Library
     
-    class SimpleGenerator
+    class GOSTConnGenerator
       attr_reader :name
       
       def initialize
-        @name = :simple
+        @name = :gost_con
         @options = OpenStruct.new
         @options.pin_step = 100
-        @options.pin_space = 400
       end
       
       def help
@@ -26,11 +25,7 @@ module Kut
           opts.on("--pin-step PIN_STEP", "Pin step in mils.") do |step|
             @options.pin_step = step.to_i()
           end
-                
-          opts.on("--pin-space PIN_SPACE","Pin space in mils.") do |space|
-            @options.pin_space = space.to_i()
-          end
-                
+                              
           opts.on("--alias ALIAS", "Component alias.") do |al|
             @options.alias = al
           end   
@@ -56,24 +51,19 @@ module Kut
           pins_desc.right_pins + pins_desc.top_pins + pins_desc.bottom_pins
         all_pins.compact! # may be to contain nil
         all_pins.sort! { |x,y| Integer(x[1]) <=> Integer(y[1]) }
-          
-        left_pins = all_pins[0 ... all_pins.length / 4]
-        bottom_pins = all_pins[(all_pins.length / 4) .. (all_pins.length / 4 * 2 - 1)]
-        right_pins = all_pins[(all_pins.length / 4 * 2) .. (all_pins.length / 4 * 3 - 1)]
-        top_pins = all_pins[(all_pins.length / 4 * 3) .. (all_pins.length - 1)]
-          
-        top_pins.reverse!
-        right_pins.reverse! 
         
-        pin_name_max_length = 0
-        all_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max }
-        snom = 60
+        max_length = [4, 5] # цепь, конт.  
+        all_pins.each { |pin| 
+          max_length[0] = [pin[0].size, max_length[0]].max 
+          max_length[0] = [pin[0].size, max_length[0]].max
+        }
+        
+        font_size = 60
         
         step = @options.pin_step 
-        space = @options.pin_space
         
-        x_size = [top_pins.length-1, bottom_pins.length-1].max*step + 2*space
-        y_size = [left_pins.length-1, right_pins.length-1].max*step + 2*space
+        y_size = all_pins.length*step + step
+        x_size = (max_length[0] + max_length[1] + 4)*font_size
         
         cmp_name = pins_desc.names[0] if pins_desc.names && pins_desc.names.size() > 0
         cmp_name = @options.name if @options.name
@@ -83,38 +73,35 @@ module Kut
         cmp_alias = pins_desc.names[1 .. pins_desc.names.size - 1] if pins_desc.names && pins_desc.names.size > 1
         cmp_alias = @options.alias if @options.alias
         
-        component = Component.new(:name => cmp_name, :reference => cmp_ref)
-        component.fields << Field.new(:number => 0, :text => cmp_ref, :pos => [x_size / 2, -y_size / 2 + 50])
-        component.fields << Field.new(:number => 1, :text => cmp_name, :pos => [x_size / 2, -y_size / 2 - 50])
+        component = Component.new(:name => cmp_name, :reference => cmp_ref, 
+          :draw_pinname => 'N', :draw_pinnumber=> 'N', :text_offset => 0)
         component.alias = cmp_alias
-        component.draws << Rectangle.new(:end => [x_size, -y_size])
+        component.draws << Rectangle.new(:start => [0, step + step /2], :end => [x_size, -y_size + step + step /2])
+        x = (max_length[1] + 2)*font_size
+        component.draws << Polygon.new(:points => [[x, step + step /2], [x, -y_size + step + step /2]])
         
-        x, y = 0, -space
+        component.fields << Field.new(:number => 0, :text => cmp_ref, :pos => [x, step + step /2 + 50])
+        component.fields << Field.new(:number => 1, :text => cmp_name, :pos => [x, -y_size / 2 + 100], :visibility => 'I')
+          
+           
+        y = step
+        pin_num_x = (max_length[1] + 2)*font_size / 2
+        component.draws << Text.new(:text => 'Конт.', :pos => [pin_num_x, y])
+        pin_name_x = (max_length[1] + 2)*font_size + (max_length[0] + 2)*font_size / 2
+        component.draws << Text.new(:text => 'Цепь', :pos => [pin_name_x, y])
+                  
+        x, y = 0, 0
         pin_len = 300
-        left_pins.each { |pin|
+        all_pins.each { |pin|
           component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x - pin_len, y], :orientation => 'R')
+          pin_num_x = x + (max_length[1] + 2)*font_size / 2
+          component.draws << Text.new(:text => pin[1], :pos => [pin_num_x, y])
+          pin_name_x = x + (max_length[1] + 2)*font_size + (max_length[0] + 2)*font_size / 2
+          component.draws << Text.new(:text => pin[0], :pos => [pin_name_x, y])
+          component.draws << Polygon.new(:points => [[x, y + step/2], [x + x_size, y + step /2]])
           y -= step
         }
-        
-        x, y = x_size, -space
-        right_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x + pin_len, y], :orientation => 'L')
-          y -= step
-        }
-        
-         
-        x, y = space, 0
-        top_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x, y + pin_len], :orientation => 'D')
-          x += step
-        }
-        
-        x, y = space, -y_size
-        bottom_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x, y - pin_len], :orientation => 'U')
-          x += step
-        }  
-        
+          
         component
       end
     end    

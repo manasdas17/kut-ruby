@@ -23,7 +23,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.main = "README.rdoc"
   rdoc.rdoc_dir = "doc/html"
   rdoc.title = "Kut Documentation"
-  rdoc.options = ['--charset=utf-8']
+  rdoc.options = ['--charset=utf-8 --copy-local-images']
 end
  
 desc "run all examples"

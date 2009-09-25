@@ -1,3 +1,20 @@
 = Kut: KiCAD utils & tools for generation, manipulation KiCAD files.
 
 == Quick Start
+
+=== Installation:
+git clone git://github.com/lexaficus/kut.git
+cd kut
+ruby ./bin/kut 
+
+=== How to generate library components:
+
+ruby bin/kut gen-lib -G simple -i examples/pins/jm20330.pins -o simple.lib --name JM_20330 
+
+link:images/lib-gen-simple.png
+
+ruby bin/kut gen-lib -i examples/pins/jm20330.pins -o default.lib --name JM20330
+
+link:images/lib-gen-default.png
+
+ruby bin/kut gen-lib -i examples/pins/ata40conn.pins -o gost.lib --name ATA --ref X

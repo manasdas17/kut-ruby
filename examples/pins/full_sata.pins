@@ -1,0 +1,25 @@
+#LEFT
+
+S1  Gnd
+S2  A+
+S3  A-
+S4  Gnd
+S5  B-
+S6  B+
+S7  Gnd
+#NO-PIN    
+P1  V33
+P2  V33
+P3  V33
+P4  Gnd
+P5  Gnd
+P6  Gnd
+P7  V5
+P8  V5
+P9  V5
+P10 Gnd
+P11 Reserved
+P12 Gnd
+P13 V12
+P14 V12
+P15 V12

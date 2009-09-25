@@ -5,11 +5,11 @@ require 'kut/library/components'
 module Kut
   module Library
     
-    class SimpleGenerator
+    class DefaultGenerator
       attr_reader :name
       
       def initialize
-        @name = :simple
+        @name = :default
         @options = OpenStruct.new
         @options.pin_step = 100
         @options.pin_space = 400
@@ -52,21 +52,17 @@ module Kut
       #out_f output file
       def generate(in_f, out_f)
         pins_desc = Kut::Library::PinsParser.parse(in_f)
-        all_pins = pins_desc.other_pins + pins_desc.left_pins + 
-          pins_desc.right_pins + pins_desc.top_pins + pins_desc.bottom_pins
-        all_pins.compact! # may be to contain nil
-        all_pins.sort! { |x,y| Integer(x[1]) <=> Integer(y[1]) }
           
-        left_pins = all_pins[0 ... all_pins.length / 4]
-        bottom_pins = all_pins[(all_pins.length / 4) .. (all_pins.length / 4 * 2 - 1)]
-        right_pins = all_pins[(all_pins.length / 4 * 2) .. (all_pins.length / 4 * 3 - 1)]
-        top_pins = all_pins[(all_pins.length / 4 * 3) .. (all_pins.length - 1)]
-          
-        top_pins.reverse!
-        right_pins.reverse! 
-        
+        left_pins = pins_desc.left_pins + pins_desc.other_pins
+        bottom_pins = pins_desc.bottom_pins
+        right_pins = pins_desc.right_pins
+        top_pins = pins_desc.top_pins
+                 
         pin_name_max_length = 0
-        all_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max }
+        left_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max if pin }
+        bottom_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max if pin }
+        right_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max if pin }
+        top_pins.each { |pin| pin_name_max_length = [pin[0].size, pin_name_max_length].max if pin }
         snom = 60
         
         step = @options.pin_step 
@@ -92,26 +88,30 @@ module Kut
         x, y = 0, -space
         pin_len = 300
         left_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x - pin_len, y], :orientation => 'R')
+          component.draws << Pin.new(:name => pin[0], :number => pin[1], 
+            :pos => [x - pin_len, y], :orientation => 'R') if pin
           y -= step
         }
         
         x, y = x_size, -space
         right_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x + pin_len, y], :orientation => 'L')
+          component.draws << Pin.new(:name => pin[0], :number => pin[1], 
+            :pos => [x + pin_len, y], :orientation => 'L') if pin
           y -= step
         }
         
          
         x, y = space, 0
         top_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x, y + pin_len], :orientation => 'D')
+          component.draws << Pin.new(:name => pin[0], :number => pin[1], 
+            :pos => [x, y + pin_len], :orientation => 'D') if pin
           x += step
         }
         
         x, y = space, -y_size
         bottom_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x, y - pin_len], :orientation => 'U')
+          component.draws << Pin.new(:name => pin[0], :number => pin[1], 
+            :pos => [x, y - pin_len], :orientation => 'U') if pin
           x += step
         }  
         
