@@ -37,6 +37,7 @@ module Kut
           generators.each { |gen|
             $stderr << "#{' ' * 3}#{gen.name}\n" 
           }
+          exit
         end
       end
       add_default_generators

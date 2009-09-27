@@ -37,6 +37,11 @@ module Kut
           opts.on("--ref REFERENCE", "Component reference.") do |ref|
             @options.reference = ref
           end
+          
+          opts.on('--no-pins', "Generate component without pins.") do
+            @options.no_pins = true
+          end
+          
         end
         opts.parse!(args)
         opts
@@ -93,7 +98,8 @@ module Kut
         x, y = 0, 0
         pin_len = 300
         all_pins.each { |pin|
-          component.draws << Pin.new(:name => pin[0], :number => pin[1], :pos => [x - pin_len, y], :orientation => 'R')
+          component.draws << Pin.new(:name => pin[0], :number => pin[1], 
+            :pos => [x - pin_len, y], :orientation => 'R') unless @options.no_pins
           pin_num_x = x + (max_length[1] + 2)*font_size / 2
           component.draws << Text.new(:text => pin[1], :pos => [pin_num_x, y])
           pin_name_x = x + (max_length[1] + 2)*font_size + (max_length[0] + 2)*font_size / 2
