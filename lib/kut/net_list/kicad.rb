@@ -3,12 +3,12 @@ require 'ostruct'
 module Kut
   module NetList
     class KiCadNetList
-      def initialize(f_in)
+      def initialize(f_in = nil)
         @components = []
-        parse(f_in) if f_in
+        load(f_in) if f_in
       end
       
-      def parse(f_in)
+      def load(f_in)
         cur_component = nil
         f_in.each_line { |line|
           #puts line

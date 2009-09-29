@@ -1,7 +1,9 @@
 require "#{File.dirname(__FILE__)}/../example_helper.rb"
 require 'kut/net_list/kicad'
+require 'kut/net_list/pcad'
 
-net_list = Kut::NetList::KiCadNetList.new($stdin)
+#net_list = Kut::NetList::KiCadNetList.new($stdin)
+net_list = Kut::NetList::PCadNetList.new($stdin)
 
 cmp_list = net_list.by_components()
 
@@ -82,6 +84,8 @@ def join_ref(ref_list)
   result
 end  
 
+result = []
+
 cmp_by_value.each { |key, cmps|
   refs = []
   count = 0
@@ -90,5 +94,9 @@ cmp_by_value.each { |key, cmps|
     count += 1
   }
   refs = join_ref refs
-  puts ";#{refs};#{key};#{count};"
+  result << ";#{refs};#{key};#{count};"
 }
+
+result.sort!
+
+result.each{ |v| puts v }
