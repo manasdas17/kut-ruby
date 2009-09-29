@@ -72,7 +72,7 @@ module Kut
       f_in = $stdin
       f_in = File.new(@options.in_file_name) if @options.in_file_name && @options.in_file_name != '-'
       f_out = $stdout
-      f_out = File.new(@options.out_file_name) if @options.out_file_name && @options.out_file_name != '-'
+      f_out = File.new(@options.out_file_name, 'w') if @options.out_file_name && @options.out_file_name != '-'
       
       net2bom(f_in, f_out)
       

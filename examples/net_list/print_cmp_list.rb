@@ -80,7 +80,6 @@ def join_ref(ref_list)
     result += prev_ref
   end 
   
-  
   result
 end  
 

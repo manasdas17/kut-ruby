@@ -77,7 +77,7 @@ module Kut
       f_in = $stdin
       f_in = File.new(@options.in_file_name) if @options.in_file_name && @options.in_file_name != '-'
       f_out = $stdout
-      f_out = File.new(@options.out_file_name) if @options.out_file_name && @options.out_file_name != '-'
+      f_out = File.new(@options.out_file_name, 'w') if @options.out_file_name && @options.out_file_name != '-'
       
       f_out << "EESchema-LIBRARY Version 2.0 24/1/1997-18:9:6\n"
       gen.prepare(args)

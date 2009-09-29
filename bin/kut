@@ -15,11 +15,13 @@ end
 require 'kut/commands/lib-gen-cmd'
 require 'kut/commands/help-cmd'
 require 'kut/commands/net_list2bom'
+require 'kut/commands/gost/bom2el_list'
 
 Kut.application.commands = [
   Kut::HelpCommand.new,
   Kut::LibraryGeneratorCommand.new,
-  Kut::NetList2Bom.new
+  Kut::NetList2Bom.new,
+  Kut::Bom2EL.new
 ]
 
 Kut.application.run
