@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'date'
 require 'kut/library/generator/simple'
 require 'kut/library/generator/default'
 require 'kut/library/generator/gost-con'
@@ -79,7 +80,8 @@ module Kut
       f_out = $stdout
       f_out = File.new(@options.out_file_name, 'w') if @options.out_file_name && @options.out_file_name != '-'
       
-      f_out << "EESchema-LIBRARY Version 2.0 24/1/1997-18:9:6\n"
+      dt = DateTime.now
+      f_out << "EESchema-LIBRARY Version 2.0 #{dt.day}/#{dt.mon}/#{dt.year}-#{dt.hour}:#{dt.min}:#{dt.sec}\n"
       gen.prepare(args)
       f_out << gen.generate(f_in, f_out)
       f_out << "#EndLibrary\n" 

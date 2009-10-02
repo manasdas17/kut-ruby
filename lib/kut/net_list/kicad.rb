@@ -11,13 +11,13 @@ module Kut
       def load(f_in)
         cur_component = nil
         f_in.each_line { |line|
-          #puts line
-          #( /4A5F296D con-yamaichi-cf-2-CF050P2  X4 CF050P2 {Lib=CF050P2}
-          if mh = /^\s+\(\s+\/([\dABCDEF]{8})\s+(\S*)\s+(\S*)\s+(\S*)\s+/.match(line)
+          #( /4A5F296D/4A5F296D con-yamaichi-cf-2-CF050P2  X4 CF050P2 {Lib=CF050P2}
+          if mh = /^\s+\(\s+((?:\/[\dABCDEF]{8})+)\s+(\S*)\s+(\S*)\s+(\S*)\s+(?:\{Lib=(\S*)\})?\s*/.match(line)
             cur_component = OpenStruct.new
             cur_component.reference = mh[3]
             cur_component.footprint = mh[2]
             cur_component.value = mh[4]
+            cur_component.name = mh[5]
             cur_component.nets = []
           end 
           
