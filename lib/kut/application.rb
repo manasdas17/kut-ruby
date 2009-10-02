@@ -14,9 +14,9 @@ module Kut
     def show_help
       puts 'usage: kut [--help] COMMAND [ARGS]'
       puts 'The most commonly used kut commands are:'
-      cmd_name_len = 10
+      cmd_name_len = 15
       commands.each { |cmd|
-        cmd_space = ' ' * (cmd_name_len - cmd.name.size)
+        cmd_space = ' ' * [(cmd_name_len - cmd.name.size), 0].max
         puts "#{' '*3}#{cmd.name}#{cmd_space}#{cmd.help_banner}"
       }
       exit

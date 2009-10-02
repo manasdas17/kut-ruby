@@ -32,10 +32,3 @@ task :examples do
   examples.each { |file| `ruby -Ilib #{file}` }
   puts "Ran in #{Time.now - t} s"
 end
-
-require 'kut-gemspec' 
- 
-Rake::GemPackageTask.new(@spec) do |pkg|
-  pkg.need_zip = true
-  pkg.need_tar = true
-end

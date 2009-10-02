@@ -56,20 +56,7 @@ module Kut
       @option_parser.parse!(args)
       @option_parser.to_s()
     end    
-    
-    def net2bom(f_in, f_out)
-      net_list = @options.net_list_loader.new(f_in)
-      cmp_list = net_list.by_components()
-      
-      sep = @options.separator
-      
-      f_out << "ref#{sep}value#{sep}footprint\n"
-      
-      cmp_list.each{ |cmp|
-        f_out << "#{cmp.reference}#{sep}#{cmp.value}#{sep}#{cmp.footprint}\n"
-      }
-    end
-    
+       
     def run(args)
 
       begin @option_parser.parse!(args)
@@ -106,13 +93,13 @@ module Kut
         f_out = $stdout
         f_out = File.new(o_f_n, 'w') if o_f_n && o_f_n != '-'
         
-        f_out << "#ALIAS #{als}\n"
+        f_out << "#NAMES #{als}\n"
         cmp.nets.each { |net|
-          net_n = net[:net].gsub(/\/[\w\d]+\//, '').gsub('?', ' ')
+          net_n = net[:net].gsub(/\/[\w\d]+\//, '').gsub('/','').gsub('?', '~')
           f_out << "#{net[:pin]} #{net_n}\n" 
         }
         
-        f_out << "\n" if o_f_n == '-'
+        f_out << "#ENDPINS\n"
       }
       
     end

@@ -84,6 +84,13 @@ module Kut
       f_out << "EESchema-LIBRARY Version 2.0 #{dt.day}/#{dt.mon}/#{dt.year}-#{dt.hour}:#{dt.min}:#{dt.sec}\n"
       gen.prepare(args)
       f_out << gen.generate(f_in, f_out)
+      
+      if f_in == $stdin
+        while ! f_in.eof?
+          f_out << gen.generate(f_in, f_out)
+        end
+      end
+      
       f_out << "#EndLibrary\n" 
     end
   end

@@ -34,7 +34,9 @@ module Kut
             result.reference = $1
           when /\A#NAMES\s+(.*)/
             str =$1.gsub(/\s+/, '')
-            result.names = str.split(',')         
+            result.names = str.split(',')
+          when /\A#ENDPINS\s*/
+            break         
           end
         }
         
